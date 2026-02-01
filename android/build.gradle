@@ -18,7 +18,11 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+
+        // 👇 REQUIRED to load local AAR
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -27,7 +31,6 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.rohit.pocketbase_server_flutter'
-
     compileSdk 34
 
     compileOptions {
@@ -51,19 +54,21 @@ android {
     dependencies {
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.2.0'
+
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-        implementation 'com.github.rohitsangwan01:pocketbase_mobile:1.0.0'
+
+        // ✅ USE LOCAL POCKETBASE v0.36.1 AAR
+        implementation(name: "pocketbaseMobile", ext: "aar")
     }
 
     testOptions {
         unitTests.all {
             useJUnitPlatform()
-
             testLogging {
-               events "passed", "skipped", "failed", "standardOut", "standardError"
-               outputs.upToDateWhen {false}
-               showStandardStreams = true
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen { false }
+                showStandardStreams = true
             }
         }
     }
